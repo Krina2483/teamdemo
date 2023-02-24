@@ -1,0 +1,39 @@
+﻿@using AddressBookDemo.Models;
+@{
+    ViewData["Title"] = "LOC_CountryAddEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@model LOC_CountryModel
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="LOC_Country" asp-action="Save">
+            @Html.HiddenFor(x=>x.CountryID)
+            <h3>@TempData["CountryInsertingMsg"]</h3>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CountryName</label>
+                <input type="text" class="form-control" asp-for="CountryName" placeholder="Enter CountryName"/>
+                <span asp-validation-for="CountryID" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CountryCode</label>
+                <input type="text" class="form-control" asp-for="CountryCode" placeholder="Enter CountryCode" />
+                <span asp-validation-for="CountryCode" class="text-danger"></span>
+            </div>
+            <hr />
+            <input type="submit" class="btn btn-success" />
+            <input type="button" class="btn btn-danger" value="Cancel" onclick="location.href='@Url.Action("Index")';" />
+
+        </form>
+    </div>
+
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

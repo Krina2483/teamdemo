@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "MST_ContactCategoryAddEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model MST_ContactCategoryModel
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="MST_ContactCategory" asp-action="Save">
+            @Html.HiddenFor(x=>x.ContactCategoryID)
+            <h3>@TempData["ContactCategoryInsertingMsg"]</h3>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>ContactCategoryName</label>
+                <input type="text" class="form-control" asp-for="ContactCategoryName" placeholder="Enter ContactCategoryName" />
+                <span asp-validation-for="ContactCategoryName" class="text-danger"></span>
+            </div>
+            <hr />
+            <input type="submit" class="btn btn-success"/>
+            <input type="button" class="btn btn-danger" value="Cancel" onclick="location.href='@Url.Action("Index")';" />
+
+        </form>
+    </div>
+
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "LOC_CityAddEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model LOC_CityModel
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="LOC_City" asp-action="Save">
+            @Html.HiddenFor(x=>x.CityID)
+            <h3>@TempData["CityInsertingMsg"]</h3>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CountryName</label>
+                <select class="form-control" asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList, "CountryID","CountryName"))" onchange="fnOnStateChange()">
+                    <option value="">Select Country</option>
+                </select>
+                <span asp-validation-for="CountryID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>StateName</label>
+                <select class="form-control" asp-for="StateID" asp-items="@(new SelectList(ViewBag.StateList, "StateID","StateName"))">
+                    <option value="">Select State</option>
+                </select>
+                <span asp-validation-for="StateID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CityName</label>
+                <input type="text" class="form-control" asp-for="CityName" placeholder="Enter CityName" />
+                <span asp-validation-for="CityName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CityCode</label>
+                <input type="text" class="form-control" asp-for="CityCode" placeholder="Enter CityCode" />
+                <span asp-validation-for="CityCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CityPincode</label>
+                <input type="text" class="form-control" asp-for="CityPincode" placeholder="Enter CityPincode" />
+                <span asp-validation-for="CityPincode" class="text-danger"></span>
+            </div>
+            
+            <hr />
+            <input type="submit" class="btn btn-success"/>
+            <input type="button" class="btn btn-danger" value="Cancel" onclick="location.href='@Url.Action("Index")';" />
+
+        </form>
+    </div>
+
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+     }
+
+
+    <script>
+        function fnOnStateChange() {
+            var CountryID = $("#CountryID").val();
+
+            if (CountryID !== "") {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByCountry","LOC_City")" + "?&CountryID=" + CountryID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading dropdown.");
+                        }
+                    });
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+            }
+        }
+    </script>
+}
+

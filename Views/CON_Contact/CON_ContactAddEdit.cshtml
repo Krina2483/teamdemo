@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "CON_ContactAddEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model CON_ContactModel
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="CON_Contact" asp-action="Save">
+            @Html.HiddenFor(x=>x.PersonID)
+            <h3>@TempData["PersonInsertingMsg"]</h3>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>PersonName</label>
+                <input type="text" class="form-control" asp-for="PersonName" placeholder="Enter PersonName" />
+                <span asp-validation-for="PersonName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CountryName</label>
+                <select class="form-control" asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList, "CountryID","CountryName"))" onchange="fnOnStateChange();">
+                    <option value="">Select Country</option>
+                </select>
+                <span asp-validation-for="CountryID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>StateName</label>
+                <select class="form-control" asp-for="StateID" asp-items="@(new SelectList(ViewBag.StateList, "StateID","StateName"))" onchange="fnOnCityChange();">
+                    <option value="">Select State</option>
+                </select>
+                <span asp-validation-for="StateID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CityName</label>
+                <select class="form-control" asp-for="CityID" asp-items="@(new SelectList(ViewBag.CityList, "CityID","CityName"))">
+                    <option value="">Select City</option>
+                </select>
+                <span asp-validation-for="CityID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>Address</label>
+                <input type="text" class="form-control" asp-for="Address" placeholder="Enter Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>Mobile</label>
+                <input type="text" class="form-control" asp-for="Mobile" placeholder="Enter Mobile" />
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>AlternetContact</label>
+                <input type="text" class="form-control" asp-for="AlternetContact" placeholder="Enter AlternetContact" />
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>Email</label>
+                <input type="text" class="form-control" asp-for="Email" placeholder="Enter Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>Date_Of_Birth</label>
+                <input type="date" class="form-control" asp-for="Date_Of_Birth" />
+                <span asp-validation-for="Date_Of_Birth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Linkedln</label>
+                <input type="text" class="form-control" asp-for="Linkedln" placeholder="Enter Linkedln" />
+            </div>
+            <div class="form-group">
+                <label>Twiiter</label>
+                <input type="text" class="form-control" asp-for="Twiiter" placeholder="Enter Twiiter" />
+            </div>
+            <div class="form-group">
+                <label>Insta</label>
+                <input type="text" class="form-control" asp-for="Insta" placeholder="Enter Insta" />
+            </div>
+            <div class="form-group">
+                <label>GitHub</label>
+                <input type="text" class="form-control" asp-for="GitHub" placeholder="Enter GitHub" />
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>Gender</label>
+                <input type="text" class="form-control" asp-for="Gender" placeholder="Enter Gender" />
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>TypeOfProfession</label>
+                <input type="text" class="form-control" asp-for="TypeOfProfessio" placeholder="Enter TypeOfProfession" />
+                <span asp-validation-for="TypeOfProfessio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>CompanyName</label>
+                <input type="text" class="form-control" asp-for="CompanyName" placeholder="Enter CompanyName" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>Designation</label>
+                <input type="text" class="form-control" asp-for="Designation" placeholder="Enter Designation" />
+                <span asp-validation-for="Designation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><span class="text-danger">*</span>ContactCategoryName</label>
+                <select class="form-control" asp-for="ContactCategoryID" asp-items="@(new SelectList(ViewBag.ContactCategoryList, "ContactCategoryID","ContactCategoryName"))">
+                    <option value="">Select ContactCategory</option>
+                </select>
+                <span asp-validation-for="ContactCategoryID" class="text-danger"></span>
+            </div>
+            <hr />
+            <input type="submit" class="btn btn-success" />
+            <input type="button" class="btn btn-danger" value="Cancel" onclick="location.href='@Url.Action("Index")';" />
+
+        </form>
+    </div>
+
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        
+        function fnOnStateChange() {
+            var CountryID = $("#CountryID").val();
+
+            if (CountryID !== "") {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByCountry","LOC_City")" + "?&CountryID=" + CountryID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading dropdown.");
+                        }
+                    });
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+            }
+        }
+        function fnOnCityChange() {
+            var StateID = $("#StateID").val();
+
+            if (StateID !== "") {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByState","CON_Contact")" + "?&StateID=" + StateID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#CityID").append($("<option></option>").val(value.cityID).html(value.cityName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading dropdown.");
+                        }
+                    });
+            }
+            else {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+            }
+        }
+    </script>
+    
+}
+
+

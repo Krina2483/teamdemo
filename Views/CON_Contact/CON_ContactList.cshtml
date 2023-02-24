@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Contact List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data
+@model DataTable
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-10">
+            <h4>Contact List</h4>
+        </div>
+        <div class="col-md-2">
+            <a asp-controller="CON_Contact" asp-action="Add" class="btn btn-success">Add Contact</a>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="search">
+    <div class="pull-right">
+        <div id="sample_1_filter" class="dataTables_filter">
+            <label>Search<input type="search" class="form-control input-sm input-small input-inline" placeholder="" id="sample_1" /></label>
+        </div>
+    </div>
+</div>
+<div class="portlet-body col-md-12" style="overflow-x: scroll">
+    <table class="table table-responsive table-sm table-striped table-bordered table-hover" id="sample_1">
+    <thead>
+        <tr>
+            <th>PersonName</th>
+            <th>CountryName</th>
+            <th>CountryCode</th>
+            <th>StateName</th>
+            <th>StateCode</th>
+            <th>CityName</th>
+            <th>CityCode</th>
+            <th>CityPincode</th>
+            <th>Address</th>
+            <th>Mobile</th>
+            <th>AlternetContact</th>
+            <th>Email</th>
+            <th>Date_Of_Birth</th>
+            <th>Linkedln</th>
+            <th>Twiiter</th>
+            <th>Insta</th>
+            <th>GitHub</th>
+            <th>Gender</th>
+            <th>TypeOfProfessio</th>
+            <th>CompanyName</th>
+            <th>Designation</th>
+            <th>ContactCategoryName</th>
+            <th>CreationDate</th>
+            <th>ModificationDate</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+        <tbody id="sample_2">
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["PersonName"]</td>
+                <td>@dr["CountryName"]</td>
+                <td>@dr["CountryCode"]</td>
+                <td>@dr["StateName"]</td>
+                <td>@dr["StateCode"]</td>
+                <td>@dr["CityName"]</td>
+                <td>@dr["CityCode"]</td>
+                <td>@dr["CityPincode"]</td>
+                <td>@dr["Address"]</td>
+                <td>@dr["Mobile"]</td>
+                <td>@dr["AlternetContact"]</td>
+                <td>@dr["Email"]</td>
+                <td>@dr["Linkedln"]</td>
+                <td>@dr["Twiiter"]</td>
+                <td>@dr["Insta"]</td>
+                <td>@dr["GitHub"]</td>
+                <td>@dr["Gender"]</td>
+                <td>@dr["TypeOfProfessio"]</td>
+                <td>@dr["CompanyName"]</td>
+                <td>@dr["ContactCategoryName"]</td>
+                <td>@dr["Designation"]</td>
+                <td>@Convert.ToDateTime(dr["Date_Of_Birth"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dr["CreationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dr["ModificationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>
+                    <form method="post" asp-controller="CON_Contact" asp-action="Delete">
+                        <input type="hidden" name="PersonID" value="@Convert.ToInt32(dr["PersonID"])">
+                        <button type="submit" class="btn btn-danger" onclick="return fun1()"><i class="fa fa-close"></i></button>
+                        <a class="btn btn-info btn-xs" asp-controller="CON_Contact" asp-action="Add" asp-route-PersonID="@Convert.ToInt32(dr["PersonID"])"><i class="fa fa-edit"></i></a>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+@section Scripts{
+    <script>
+            $(document).ready(function () {
+                $("#sample_1").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#sample_2 tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        function fun1() {
+            if (confirm("Are you sure you want to delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+}
